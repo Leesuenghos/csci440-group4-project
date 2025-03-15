@@ -1,3 +1,282 @@
+/* 
+@authors: Alex Tzonis
+
+colors: 
+* gray: #3C3C3C
+* dark gray: #202020
+
+etamu colors:
+  * Yellow: #FFC13B
+  * Blue: #003867
+  * Dark Blue: #002446
+*/
+
+body {
+  background-color: #202020;
+  color: white; 
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
+}
+
+header{
+  background-color: #3C3C3C;
+  border-bottom: 5px solid black;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  justify-content: left;
+}
+
+.main-page{
+  display: grid;
+  grid-template-columns: 25vw 25vw 25vw 25vw;
+  grid-template-rows: 20vh 20vh 25vh 25vh;
+  
+  /*
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 25% 25% 25% 25% 25%;
+  */
+}
+
+.attack-controls-container {
+  background-color: #3C3C3C;
+  border: 5px solid black;
+  border-radius: 15px;
+  display: flex-start;
+  margin: 20px;
+  padding: 20px;
+
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.attack-select-container {
+  align-items: flex-start;
+  margin: 20px;
+  padding: 20px;
+}
+
+.attack-types-container {
+  background-color: #3C3C3C;
+  border: 5px solid black;
+  border-radius: 15px;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 5;
+}
+
+
+.attack-config-container {
+  margin: 20px;
+  padding: 20px;
+}
+
+.header-title{
+  padding-left: 2%;
+}
+
+.execute-sim-button {
+  background-color: green;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  margin: 5px;
+  padding: 5px;
+  transition: 0.5s ease;
+}
+
+.execute-sim-button:hover {
+  background-color: lightgreen;
+  transition: 0.5s ease;
+}
+
+.pause-sim-button {
+  background-color: darkgray;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  margin: 5px;
+  padding: 5px;
+  transition: 0.5s ease;
+}
+
+.pause-sim-button:hover {
+  background-color: lightgrey;
+  transition: 0.5s ease;
+}
+
+.stop-sim-button {
+  background-color: red;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  margin: 5px;
+  padding: 5px;
+  transition: 0.5s ease;
+}
+
+.stop-sim-button:hover {
+  background-color: lightcoral;
+  transition: 0.5s ease;
+}
+
+/*
+---------------------------------------------------------------------------------------------------------------------------
+ConfigDoS
+---------------------------------------------------------------------------------------------------------------------------
+*/
+
+
+
+.dos-ip-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-ip-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-port-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-port-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-method-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-method-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-timeout-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-timeout-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-wfr-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-speed-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-speed-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-message-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-message-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.dos-save-config{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: white;
+  margin: 2px;
+  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -66,3 +345,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+*/
