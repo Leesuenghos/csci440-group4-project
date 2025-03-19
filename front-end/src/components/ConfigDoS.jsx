@@ -1,6 +1,6 @@
 /*
     @authors: Alex Tzonis
-    @date (last updated): 3/6/2025 
+    @date (last updated): 3/16/2025 
 
     This componenet will be used to take user inputs that will be used to execute a DoS attack. 
     The inputs will be passed to LOIC. 
@@ -121,7 +121,7 @@ function ConfigDoS(props) {
                             <input type='number'></input>
                         </div>
                         <div className='dos-method-container'>
-                            <p>Select Method (UDP or TCP): </p>
+                            <label>Select Method (UDP or TCP): </label>
                             <select className='method-select'>
                                 <option value=""></option>
                                 <option value="UDP">UDP</option>

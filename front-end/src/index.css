@@ -28,11 +28,14 @@ body {
   display: flex-start;
   margin: 20px;
   padding: 20px;
+  width: 100%;
 
+  /*
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 3;
+  */
 }
 
 .attack-select-container {
@@ -50,11 +53,14 @@ body {
   align-items: center;
   margin: 20px;
   padding: 20px;
+  width: 100%;
 
+  /*
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 3;
   grid-row-end: 5;
+  */
 }
 
 
@@ -137,6 +143,18 @@ body {
   grid-row-start: 1;
   grid-row-end: 5;
 }
+
+/*
+---------------------------------------------------------------------------------------------------------------------------
+ConfigBF
+---------------------------------------------------------------------------------------------------------------------------
+*/
+
+
+
+
+
+
 
 /*
 ---------------------------------------------------------------------------------------------------------------------------
@@ -261,6 +279,61 @@ ConfigDoS
   font-size: 9px;
   text-align: center;
 }
+
+/*
+---------------------------------------------------------------------------------------------------------------------------
+ConfigPhish
+---------------------------------------------------------------------------------------------------------------------------
+*/
+
+.ph-email-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.ph-email-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.ph-subject-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.ph-subject-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.ph-message-container{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
+.ph-message-container input{
+  background-color: #3C3C3C;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 2px;
+  padding: 2px;
+}
+
 
 /*
 ---------------------------------------------------------------------------------------------------------------------------

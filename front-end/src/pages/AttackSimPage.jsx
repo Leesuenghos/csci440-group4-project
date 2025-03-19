@@ -1,10 +1,20 @@
 
+/*
+    @authors: Alex Tzonis
+    @date (last updated): 3/18/2025 
+
+    This componenet will be used to take user inputs that will be used to execute a brute force attack
+*/
+
 import ConfigDoS from '../components/ConfigDoS';
+import ConfigPhish from '../components/ConfigPhish';
+import ConfigBF from '../components/ConfigBF';
 import react, { useState } from 'react';
 
 export function AttackSimPage() {
   const [showDoSConfig, setShowDoSConfig] = useState(false);
   const [showBFConfig, setShowBFConfig] = useState(false);
+  const [showPhishConfig, setShowPhishConfig] = useState(false);
   const [currentConfig, setCurrentConfig] = useState("");
 
 
@@ -19,12 +29,20 @@ export function AttackSimPage() {
     setShowDoSConfig(!showDoSConfig);
   }
 
+  const togglePhishConfig = (optionString) => {
+    setCurrentConfig(optionString);
+    setShowPhishConfig(!showPhishConfig);
+  }
+
   function toggleOffCurrentConfig(currentConfigValue){
     if(currentConfigValue === "dos-option"){
       toggleDoSConfig("");
     }
     else if(currentConfigValue === "bg-option"){
       toggleBFConfig("");
+    }
+    else if(currentConfigValue === "ph-option"){
+      togglePhishConfig("");
     }
   }
 
@@ -34,6 +52,9 @@ export function AttackSimPage() {
     }
     else if(targetValue === "bf-option") {
       toggleBFConfig(targetValue);
+    }
+    else if(targetValue === "ph-option") {
+      togglePhishConfig(targetValue);
     }
   }
 
@@ -71,13 +92,16 @@ export function AttackSimPage() {
                   <select name="attack-type" onChange={handleConfigToggle}>
                     <option value=""></option>
                     <option value="dos-option">Denial-of-Service Attack (DoS)</option>
-                    <option value="bf-option">Brute Force</option>
+                    <option value="bf-option">Brute Force Attack</option>
+                    <option value="ph-option">Phishing Attack</option>
                   </select>
                   <br/>
                   <button className='add-config-button'>Add Configuration To Simulation</button>
                 </div>
                 <div className='attack-config-container'>
+                  <ConfigBF isBFVisible={showBFConfig}></ConfigBF>
                   <ConfigDoS isDoSVisible={showDoSConfig}></ConfigDoS>
+                  <ConfigPhish isPhishVisible={showPhishConfig}></ConfigPhish>
                 </div>
               </div>
           </>);
