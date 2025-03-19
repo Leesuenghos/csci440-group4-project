@@ -28,7 +28,6 @@ body {
   display: flex-start;
   margin: 20px;
   padding: 20px;
-  width: 100%;
 
   /*
   grid-column-start: 1;
@@ -53,7 +52,6 @@ body {
   align-items: center;
   margin: 20px;
   padding: 20px;
-  width: 100%;
 
   /*
   grid-column-start: 1;
