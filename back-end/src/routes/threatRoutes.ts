@@ -1,3 +1,4 @@
+// routes/threatRoutes.ts
 import { Router } from 'express';
 import { getThreatEvents } from '../controllers/threatController';
 

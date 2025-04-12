@@ -1,3 +1,4 @@
+// routes/simulationRoutes.ts
 import { Router } from 'express';
 import { startSimulation, stopSimulation } from '../controllers/simulationController';
 
