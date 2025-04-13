@@ -160,25 +160,19 @@ ConfigDoS
 ---------------------------------------------------------------------------------------------------------------------------
 */
 
-
-
-.dos-ip-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-ip-container input{
+.dos-select-input {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
-.dos-port-container{
+.dos-input-container, .dos-select-container {
   background-color: #202020;
   border: 2px solid black;
   border-radius: 15px;
@@ -186,84 +180,52 @@ ConfigDoS
   padding: 2px;
 }
 
-.dos-port-container input{
+.dos-input-container input[type="text"] {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
 }
 
-.dos-method-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-method-container input{
+.dos-input-container input[type="number"] {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
 }
 
-.dos-timeout-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-timeout-container input{
+.dos-input-container input[type="checkbox"] {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  cursor: pointer;
   margin: 2px;
   padding: 2px;
 }
 
-.dos-wfr-container{
+.dos-input-container input[type="checkbox"]:disabled:hover {
+  cursor: auto;
+}
+
+.dos-input-container input:disabled {
   background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
+  color: #3C3C3C;
 }
 
-.dos-speed-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-speed-container input{
+.dos-select-container select {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
-}
-
-.dos-message-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-message-container input{
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
 .dos-save-config{
@@ -276,6 +238,30 @@ ConfigDoS
   font-family: Arial, sans-serif;
   font-size: 9px;
   text-align: center;
+}
+
+.dos-button-locks {
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: white;
+  margin: 2px;
+  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
+}
+
+.dos-button-locks:disabled {
+  color: #3C3C3C;
+}
+
+.dos-button-locks:hover {
+  cursor: pointer;
+}
+
+.dos-button-locks:hover:disabled {
+  cursor: auto;
 }
 
 /*

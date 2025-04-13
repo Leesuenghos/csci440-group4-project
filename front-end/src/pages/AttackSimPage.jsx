@@ -1,7 +1,7 @@
 
 /*
     @authors: Alex Tzonis
-    @date (last updated): 3/18/2025 
+    @date (last updated): 4/12/2025 
 
     This componenet will be used to take user inputs that will be used to execute a brute force attack
 */
@@ -16,7 +16,6 @@ export function AttackSimPage() {
   const [showBFConfig, setShowBFConfig] = useState(false);
   const [showPhishConfig, setShowPhishConfig] = useState(false);
   const [currentConfig, setCurrentConfig] = useState("");
-
 
 
   const toggleBFConfig = (optionString) => {
