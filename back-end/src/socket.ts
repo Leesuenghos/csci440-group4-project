@@ -2,7 +2,6 @@
 import { Server, Socket } from 'socket.io';
 import { getAllEvents, ThreatEvent } from './models/eventModel';
 
-// This is the global Socket.IO server instance
 let io: Server | null = null;
 
 export function setupSocket(socketServer: Server) {

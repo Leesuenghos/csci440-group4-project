@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
-import simulationRoutes from './routes/simulationRoutes';
 import threatRoutes from './routes/threatRoutes';
 import attackRoutes from './routes/attackRoutes';
 
@@ -15,7 +14,6 @@ app.use(bodyParser.json());
 app.use(morgan('dev')); // Add logging middleware
 
 // Routes
-app.use('/api/simulation', simulationRoutes);
 app.use('/api/threats', threatRoutes);
 app.use('/api/attack', attackRoutes);
 
