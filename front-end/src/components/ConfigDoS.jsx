@@ -1,6 +1,6 @@
 /*
     @authors: Alex Tzonis
-    @date (last updated): 4/12/2025 
+    @date (last updated): 4/17/2025 
 
     This componenet will be used to take user inputs that will be used to execute a DoS attack. 
     The inputs will be passed to LOIC. 
@@ -14,9 +14,9 @@ import react, { useState } from 'react';
 function ConfigDoS(props) {
     const [targetURL,setTargetURL] = useState("");  // stores target URL
     const [ipAddress, setIpAddress] = useState(""); // stores ip address
-    const [portNum, setPortNum] = useState();       // stores port num
-    const [method, setMethod] = useState();         // stores method (can only be UDP,TCP, or NONE)
-    const [timeout, setTimeout] = useState();       // stores timeout
+    const [portNum, setPortNum] = useState(0);       // stores port num
+    const [method, setMethod] = useState("none");         // stores method (can only be UDP,TCP, or NONE)
+    const [timeout, setTimeout] = useState(0);       // stores timeout
     const [threads, setThreads] = useState(0);      // stores threads
     const [message, setMessage] = useState("");     // stores message
     const [waitForReply, setWaitForReply] = useState(false);        // stores WFR (boolean)
@@ -24,6 +24,7 @@ function ConfigDoS(props) {
     const [targetLockIP, setTargetLockIP] = useState(false);        // if IP is locked in       
     const [targetLockURL, setTargetLockURL] = useState(false);      // if URL is locked in
     const [fullTargetLock, setFullTargetLock] = useState(false);    // if all config values are inputted and valid
+    const [dosAdded, setDoSAdded] = useState(false);
     // const [attackStatus, setAttackStatus] = useState();
 
     // click-handling functions
@@ -45,6 +46,9 @@ function ConfigDoS(props) {
     const updateTargetLockIP = () => { setTargetLockIP(!targetLockIP); }        // updates targetLockIP
     const updateTargetLockURL = () => { setTargetLockURL(!targetLockURL); }     // updates targetLockURL
     const updateFullTargetLock = () => { setFullTargetLock(!fullTargetLock); }        // updates fullTargetLock
+    const enableDoSAdded = () => { setDoSAdded(true); }     // sets dosAdded to true
+    const disableDoSAdded = () => { setDoSAdded(false); }   // sets dosAdded to false
+
 
     // checking/validation functions
     function checkTargetURL(inputURL) {
@@ -129,6 +133,7 @@ function ConfigDoS(props) {
                 updateTargetLockIP();   // set targetLockIP to true
                 disableIPURLFields();   // lock out IP and URL fields
                 document.getElementById('url-input').value = "";    // clear URL field
+                updateTargetURL("");    // update targetURL value
                 document.getElementById('dos-lock-url').disabled = true;    // lock url button
                 document.getElementById('dos-lock-ip').textContent = "Unlock IP";   // change lock ip button => unlock ip button
             }
@@ -155,6 +160,7 @@ function ConfigDoS(props) {
                 updateTargetLockURL();  // set targetLockURL to true
                 disableIPURLFields();   // lock out IP and URL fields
                 document.getElementById('ip-input').value = "";         // clear IP field
+                updateIpAddress("");    // update ipAddress value
                 document.getElementById('dos-lock-ip').disabled = true; // lock ip button
                 document.getElementById('dos-lock-url').textContent = "Unlock URL";  // change unlock url button => lock url button
             }
@@ -183,6 +189,7 @@ function ConfigDoS(props) {
         const speedValue = document.getElementById('speed-input').value;
         const threadsValue = document.getElementById('threads-input').value;
         const timeoutValue = document.getElementById('timeout-input').value;
+        const wfrValue = document.getElementById('wfr-input').value
 
         // user wants to unlock fullTargetLock
         if (fullTargetLock) {
@@ -197,10 +204,17 @@ function ConfigDoS(props) {
         // else, valid target lock on either IP or URL -> good to go
         else {
             // if all other parameters are valid, lock full config
-            if(verifyConfigElements(messageValue, methodValue, portNumValue, speedValue, threadsValue, timeoutValue))
+            if(verifyConfigElements(messageValue, methodValue, portNumValue, speedValue, threadsValue, timeoutValue, wfrValue))
             {
-                lockInputFields();
-                updateFullTargetLock();
+                lockInputFields();          // lock input fields from changing
+                updateFullTargetLock();     // set fullTargetLock to True
+                updateMessage(messageValue);    // update message
+                updateMethod(methodValue);      // update method
+                updatePortNumber(portNumValue); // update portNum 
+                updateSpeed(speedValue);        // update speed
+                updateThreads(threadsValue);    // update threads
+                updateTimeout(timeoutValue);    // update timeout
+                updateWaitForReply(wfrValue);   // update waitForReply
             }
             // else, invalid configuration -> do nothing
             else {
@@ -279,6 +293,28 @@ function ConfigDoS(props) {
         document.getElementById('dos-lock-config').textContent = "Lock Config";
     }
 
+    // https://medium.com/@ozhanli/passing-data-from-child-to-parent-components-in-react-e347ea60b1bb    
+
+
+    const handleSendConfig = (event) => {
+        // full target lock is established and dos attack hasn't been added, send data
+        if (fullTargetLock && !dosAdded) {
+            props.sendConfig(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply, !dosAdded);
+            document.getElementById('add-dos-config').textContent = 'Remove DoS Configuration from Simulation'
+            document.getElementById('dos-lock-config').disabled = true;
+            enableDoSAdded();
+        }
+        // full target lock is established and dos attack is alread added, user wants to remove attack
+        else if (fullTargetLock && dosAdded){
+            props.sendConfig('', '', '', 'none', 0, '', 0, 0, false, !dosAdded);
+            document.getElementById('add-dos-config').textContent = 'Add DoS Configuration to Simulation'
+            document.getElementById('dos-lock-config').disabled = false;
+            disableDoSAdded();
+        }
+    }
+
+    
+
     if(props.isDoSVisible == true)
     {
         return( <>  
@@ -319,7 +355,7 @@ function ConfigDoS(props) {
                                 <input type="checkbox" id='wfr-input'></input>
                             </div>
                             <div className='dos-input-container'>
-                                <label>Speed: {speed}</label>
+                                <label>Speed: </label>
                                 <input type="number" id='speed-input'></input>
                             </div>
                             <div className='dos-input-container'>
@@ -328,6 +364,9 @@ function ConfigDoS(props) {
                             </div>
                             <button className='dos-button-locks' id='dos-lock-config' onClick={handleLockFullConfig}>Lock Config</button>
                         </form>
+                        <button className='dos-button-locks' id='add-dos-config' onClick={handleSendConfig} disabled={!fullTargetLock}>
+                            Add DoS Configuration to Simulation
+                        </button>
                     </div>
                 </>
         );
