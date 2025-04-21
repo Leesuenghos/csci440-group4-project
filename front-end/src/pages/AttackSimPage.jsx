@@ -1,7 +1,7 @@
 
 /*
     @authors: Alex Tzonis
-    @date (last updated): 4/17/2025 
+    @date (last updated): 4/20/2025 
 */
 
 import ConfigDoS from '../components/ConfigDoS';
@@ -32,12 +32,21 @@ export function AttackSimPage() {
     waitForReply: false
   });
 
+  const [phishAttack, setPhishAttack] = useState({
+    targets: [],
+    subject: '',
+    fromAddress: '',
+    fromName: '',
+    dontAddTracking: false,
+    message: ''
+  });
+
   // click-handling functions
   const handleLaunchAttack = () => launchAttack();    // handles clicks for execute sim buttion
   const handlePauseAttack = () => pauseAttack();      // handles clicks for pause sim button
   const handleStopAttack = () => stopAttack();        // handles clicks for stop sim button
 
-  // responsible for "retrieveing" passed values from ConfigDoS
+  // responsible for "retrieving" passed values from ConfigDoS
   const handleDataFromDoS = (targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply, addingDos) => {
     // update dosAttack with new values
     updateDoSAttack(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply); 
@@ -55,6 +64,32 @@ export function AttackSimPage() {
     setDoSAttack({URL: targetURL, IP: ipAddress, message: message, method: method, 
       portNumber: portNum, speed: speed, threads: threads, timeout: timeout, waitForReply: waitForReply}); 
   } 
+
+  // responsible for "retrieving" passed values from ConfigPhish
+  const handlePhishConfig = (subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent, addingPhish) => {
+    savePhishConfig(subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent, addingPhish);
+  }
+
+  function savePhishConfig(subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent, addingPhish) {
+    updatePhishAttack(subject, targetList, fromAddress, fromName,  doNotAddTracking, emailContent);
+    if(addingPhish) {
+      enablePhishReady();   // if the user is adding the attack, set phishReady to true
+    }
+    else {
+      disablePhishReady();  // else, the user is removing the attack, set phishReady to false
+    }
+  }
+
+  function updatePhishAttack(subject, targetList, fromAddress, fromName,  doNotAddTracking, emailContent) {
+    setPhishAttack({subject: subject, targets: targetList, fromAddress: fromAddress, fromName: fromName,  
+      dontAddTracking: doNotAddTracking, message: emailContent});
+    
+    /*
+    for (let i=0; i<targetList.length;i++) {
+      console.log(targetList[i])
+    }
+    */
+  }
 
   const toggleBFConfig = (optionString) => {
     setCurrentConfig(optionString);
@@ -79,6 +114,15 @@ export function AttackSimPage() {
     setDoSReady(false);
   }
 
+  const enablePhishReady = () => {
+    setPhishReady(true);
+  }
+
+  const disablePhishReady = () => {
+    setPhishReady(false);
+  }
+
+
   const changeAttackStatus = (optionString) => {
     if(optionString === "RUNNING") { setAttackStatus(optionString); }
     else if(option === "IDLE") { setAttackStatus(optionString); }
@@ -90,16 +134,17 @@ export function AttackSimPage() {
     // determine which attack to launch
     // checks if the attack is ready, if true, grab info to launch attack, else: move on to next attack
     if (currentConfig === "dos-option" && dosReady) {
-      // launch dos attack
+      changeAttackStatus("RUNNING");  // change attack status to running
       launchDoSAttack();
+
     }
     else if (currentConfig === "ph-option" && phishReady) {
-      // launch phishing attack
-      changeAttackStatus("RUNNING");
+      changeAttackStatus("RUNNING");  // change attack status to running
+      launchPhAttack();
     }
     else if (currentConfig === "bf-option" && bfReady) {
-      // launch brute force attack
-      changeAttackStatus("RUNNING");
+      changeAttackStatus("RUNNING");  // change attack status to running
+      // launch brute force attack 
     }
     else {
       // no attacks could be launched - inform user
@@ -133,26 +178,39 @@ export function AttackSimPage() {
       // start attack
       changeAttackStatus("RUNNING");
     }
-    else if(attackStatus === "PAUSED") {
-      // resume attack
-      changeAttackStatus("RUNNING");
-    }
-    // else, can't accept input if already running
+    // else, can't accept input if already running or paused
   }
 
   function launchPhAttack() {
+    /*
+    below are the values to launch the dos attack
+    no need for validating the values
+    no need to check if the attack should be ran in this function
 
+    phishAttack.subject
+    phishAttack.fromAddress
+    phishAttack.fromName
+    phishAttack.dontAddTracking
+    phishAttack.message
+    phishAttack.targets
+
+    phishAttack.targets is a 3d array; format -> phishAttack.targets[i] -> one target with email, fName, and lName
+
+    the for loop below can be used to print all of the targets array
+    console.log(phishAttack.targets.length);
+    for(let i=0;i<phishAttack.targets.length;i++) {
+      console.log(String(i) + ". Email: " + phishAttack.targets[i].email);
+      console.log(String(i) + ". First Name: " + phishAttack.targets[i].fName);
+      console.log(String(i) + ". Last Name:" + phishAttack.targets[i].lName);
+    }
+    */
 
     // if attack is idle (hasn't started)
     if (attackStatus ==="IDLE") {
       // start attack
       changeAttackStatus("RUNNING");
     }
-    else if(attackStatus === "PAUSED") {
-      // resume attack
-      changeAttackStatus("RUNNING");
-    }
-    // else, can't accept input if already running
+    // else, can't accept input if already running or paused
   }
 
   function launchBFAttack() {
@@ -163,29 +221,57 @@ export function AttackSimPage() {
       // start attack
       changeAttackStatus("RUNNING");
     }
-    else if(attackStatus === "PAUSED") {
-      // resume attack
-      changeAttackStatus("RUNNING");
-    }
-    // else, can't accept input if already running
+    // else, can't accept input if already running or paused
   }
 
   function pauseAttack() {
-
-
     // if attack is currently running, able to pause attack, else: nothing happens
     if(attackStatus === "RUNNING") {
-      changeAttackStatus("PAUSED");
-      // pseudocode to pause attack
+      // no option to pause a phish attacking because it can't be paused
+      if(currentConfig === "dos-option") {
+        pauseDoSAttack();
+        changeAttackStatus("PAUSED");
+      }
+      else if(currentConfig === "bf-option") {
+        pauseBFAttack();
+        changeAttackStatus("PAUSED");
+      }
+      else {
+        // no attack to pause
+      }
     }
+  }
+
+  function pauseDoSAttack() {
+    // pseudocode to pause DoS attack
+  }
+
+  function pauseBFAttack() {
+    // pseudocode to pause BF attack
   }
 
   function stopAttack() {
     // if attack is currently running, able to stop attack, else: nothing happens
     if(attackStatus === "RUNNING") {
-      changeAttackStatus("IDLE");
+      // no option to stop a phish attacking because it can't be stopped
+      if(currentConfig === "dos-option") {
+        stopDoSAttack();
+        changeAttackStatus("IDLE");
+      }
+      else if(currentConfig === "bf-option") {
+        stopBFAttack();
+        changeAttackStatus("IDLE");
+      }
       // pseudocode to stop attack
     }
+  }
+
+  function stopBFAttack() {
+    // pseudocode to stop brute force attack
+  }
+
+  function stopDoSAttack() {
+    // pseudocode to stop DoS attack
   }
 
   function toggleOffCurrentConfig(currentConfigValue){
@@ -248,6 +334,10 @@ return( <>
               <label className='attack-info-labels'>Message: {dosAttack.message}</label>
             </div>
             <div className='attack-info-container' id='ph-info-container' hidden={!phishReady}>
+              <label className='attack-info-labels'>Subject: {phishAttack.subject}</label>
+              <label className='attack-info-labels'>From Address: {phishAttack.fromAddress}</label>
+              <label className='attack-info-labels'>From Name: {phishAttack.fromName}</label>
+              <label className='attack-info-labels'>Do NOT Add Tracking: {String(phishAttack.dontAddTracking).toUpperCase()}</label>          
             </div>
             <div className='attack-info-container' id='bf-info-container' hidden={!bfReady}>
             </div>
@@ -255,7 +345,8 @@ return( <>
           <div className='attack-types-container'>
             <div className='attack-select-container'>
               <h2>Choose Attack</h2>
-              <select className='attack-selector-input' id="attack-type-selector" onChange={handleConfigToggle}>
+              <select className='attack-selector-input' id="attack-type-selector" 
+                disabled={dosReady || phishReady || bfReady} onChange={handleConfigToggle}>
                 <option value="NONE"></option>
                 <option value="dos-option">Denial-of-Service Attack (DoS)</option>
                 <option value="bf-option">Brute Force Attack</option>
@@ -265,8 +356,8 @@ return( <>
             </div>
             <div className='attack-config-container'>
               <ConfigBF isBFVisible={showBFConfig}></ConfigBF>
-              <ConfigDoS isDoSVisible={showDoSConfig} sendConfig={handleDataFromDoS}></ConfigDoS>
-              <ConfigPhish isPhishVisible={showPhishConfig}></ConfigPhish>
+              <ConfigDoS isDoSVisible={showDoSConfig} sendDoSConfig={handleDataFromDoS}></ConfigDoS>
+              <ConfigPhish isPhishVisible={showPhishConfig} sendPhishConfig={handlePhishConfig}></ConfigPhish>
             </div>
           </div>
           </>);

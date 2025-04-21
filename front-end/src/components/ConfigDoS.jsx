@@ -299,14 +299,14 @@ function ConfigDoS(props) {
     const handleSendConfig = (event) => {
         // full target lock is established and dos attack hasn't been added, send data
         if (fullTargetLock && !dosAdded) {
-            props.sendConfig(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply, !dosAdded);
+            props.sendDoSConfig(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply, !dosAdded);
             document.getElementById('add-dos-config').textContent = 'Remove DoS Configuration from Simulation'
             document.getElementById('dos-lock-config').disabled = true;
             enableDoSAdded();
         }
         // full target lock is established and dos attack is alread added, user wants to remove attack
         else if (fullTargetLock && dosAdded){
-            props.sendConfig('', '', '', 'none', 0, '', 0, 0, false, !dosAdded);
+            props.sendDoSConfig('', '', '', 'none', 0, '', 0, 0, false, !dosAdded);
             document.getElementById('add-dos-config').textContent = 'Add DoS Configuration to Simulation'
             document.getElementById('dos-lock-config').disabled = false;
             disableDoSAdded();
