@@ -1,6 +1,6 @@
 /*
     @authors: Alex Tzonis
-    @date (last updated): 3/16/2025 
+    @date (last updated): 4/17/2025 
 
     This componenet will be used to take user inputs that will be used to execute a DoS attack. 
     The inputs will be passed to LOIC. 
@@ -12,46 +12,48 @@
 import react, { useState } from 'react';
 
 function ConfigDoS(props) {
-    const [ipAddress, setIpAddress] = useState("");
-    const [portNum, setPortNum] = useState();
-    const [method, setMethod] = useState();     // can only be UDP,TCP, or NONE
-    const [timeout, setTimeout] = useState();
-    const [threads, setThreads] = useState(0);
-    const [message, setMessage] = useState("");
-    const [waitForReply, setWaitForReply] = useState();     // boolean, true or false
-    const [speed, setSpeed] = useState();
+    const [targetURL,setTargetURL] = useState("");  // stores target URL
+    const [ipAddress, setIpAddress] = useState(""); // stores ip address
+    const [portNum, setPortNum] = useState(0);       // stores port num
+    const [method, setMethod] = useState("none");         // stores method (can only be UDP,TCP, or NONE)
+    const [timeout, setTimeout] = useState(0);       // stores timeout
+    const [threads, setThreads] = useState(0);      // stores threads
+    const [message, setMessage] = useState("");     // stores message
+    const [waitForReply, setWaitForReply] = useState(false);        // stores WFR (boolean)
+    const [speed, setSpeed] = useState();           // stores speed
+    const [targetLockIP, setTargetLockIP] = useState(false);        // if IP is locked in       
+    const [targetLockURL, setTargetLockURL] = useState(false);      // if URL is locked in
+    const [fullTargetLock, setFullTargetLock] = useState(false);    // if all config values are inputted and valid
+    const [dosAdded, setDoSAdded] = useState(false);
     // const [attackStatus, setAttackStatus] = useState();
 
-    const updateIpAddress = (inputAddress) => {
-        setIpAddress(inputAddress);
-    }
+    // click-handling functions
+    const handleLockIPTarget = () => lockIPTarget();    // handles clicks for Lock IP button
+    const handleLockURLTarget = () => lockURLTarget();  // handles clicks for Lock URL button
+    const handleLockFullConfig = () => lockFullConfig();  // handles clicks for Lock Config Button
+    function handleMethodChange(event) { updateMethod(event.target.value); }    // handles method changes
 
-    const updatePortNumber = (inputPortNum) => {
-        setPortNum(inputPortNum);
-    }
+    // setter/update functions
+    const updateTargetURL = (inputURL) => { setTargetURL(inputURL); }           // updates targetURL
+    const updateIpAddress = (inputAddress) => { setIpAddress(inputAddress); }   // updates ipAddress
+    const updatePortNumber = (inputPortNum) => { setPortNum(inputPortNum); }    // updates portNum
+    const updateMethod = (inputMethod) => { setMethod(inputMethod); }           // updates method
+    const updateTimeout = (inputTimeout) => { setTimeout(inputTimeout); }       // updates timeout
+    const updateThreads = (inputThreads) => { setThreads(inputThreads); }       // updates threads
+    const updateMessage = (inputMessage) => { setMessage(inputMessage); }       // updates message
+    const updateWaitForReply = (inputWFR) => { setWaitForReply(inputWFR); }     // updates waitForReply
+    const updateSpeed = (inputSpeed) => { setSpeed(inputSpeed); }               // updates speed
+    const updateTargetLockIP = () => { setTargetLockIP(!targetLockIP); }        // updates targetLockIP
+    const updateTargetLockURL = () => { setTargetLockURL(!targetLockURL); }     // updates targetLockURL
+    const updateFullTargetLock = () => { setFullTargetLock(!fullTargetLock); }        // updates fullTargetLock
+    const enableDoSAdded = () => { setDoSAdded(true); }     // sets dosAdded to true
+    const disableDoSAdded = () => { setDoSAdded(false); }   // sets dosAdded to false
 
-    const updateMethod = (inputMethod) => {
-        setMethod(inputMethod);
-    }
 
-    const updateTimeout = (inputTimeout) => {
-        setTimeout(inputTimeout);
-    }
-
-    const updateThreads = (inputThreads) => {
-        setThreads(inputThreads);
-    }
-
-    const updateMessage = (inputMessage) => {
-        setMessage(inputMessage);
-    }
-
-    const updateWaitForReply = (inputWFR) => {
-        setWaitForReply(inputWFR);
-    }
-
-    const updateSpeed = (inputSpeed) => {
-        setSpeed(inputSpeed);
+    // checking/validation functions
+    function checkTargetURL(inputURL) {
+        // will need to check if URL is valid or not
+        return true;
     }
 
     function checkIPAddress(inputAddress) {
@@ -59,14 +61,32 @@ function ConfigDoS(props) {
         return true;
     }
 
+    // checks if port number is valid
     function checkPortNumber(inputPortNum) {
-        // will need to check if port num is valid or not
-        return true;
+        if(isNaN(inputPortNum)) {
+            return false;
+        }
+        else {
+            // check if valid port number
+            // may need to differentiate between ephemeral and non-ephemeral port numbers
+            return true;
+        }
     }
 
+    // checks if threads is a valid number
     function checkThreads(inputThreads) {
-        // will need to check if there is a valid number of threads
-        return true;
+        if(isNaN(inputThreads)) {
+            return false;
+        }
+        else {
+            // too small or too large
+            if (inputThreads < 1 || inputThreads > 10) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
     }
 
     function checkTimeout(inputTimeout) {
@@ -79,72 +99,274 @@ function ConfigDoS(props) {
         return true;
     }
 
-    function verifyConfig(inputAddress, inputPortNum, inputThreads, inputTimeout, inputSpeed, inputWFR, inputMethod, inputMessage) {
-        a = checkIPAddress(inputAddress);
-        b = checkPortNumber(inputPortNum);
-        c = checkThreads(inputThreads);
-        d = checkTimeout(inputTimeout);
-        e = checkSpeed(inputSpeed);
+    function checkMessage(message) {
+        // will need to check if string for message is valid
+        return true;
+    }
 
-        if((a === b === c === d === e === true) && inputMethod !== "")
-        {
+    function checkMethod(method) {
+        // if method is UDP or TCP, return true
+        // else, return false
+        if(method === 'UDP' || method === 'TCP') {
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
 
-    function saveConfig(inputAddress, inputPortNum, inputThreads, inputTimeout, inputSpeed, inputWFR, inputMethod, inputMessage) {
-        if(verifyConfig(inputAddress, inputPortNum, inputThreads, inputTimeout, inputSpeed, inputWFR, inputMethod, inputMessage))
-        {
-            // send config to attack sim / backend
+    function lockIPTarget() {
+        const ipInput = document.getElementById('ip-input').value.trim();   // store inputted IP
+
+        // if IP is locked on -> user wants to unlock, trigger statements
+        if(targetLockIP) {
+            updateTargetLockIP();   // set targetLockIP to false
+            enableIPURLFields();    // enable text fields
+            document.getElementById('dos-lock-url').disabled = false;   // unlock url button
+            document.getElementById('dos-lock-ip').textContent = "Lock IP"; // change unlock ip button => lock ip button
         }
-        else
-        {
-            // we'll inform user not all details are inputed
+        // else user is locking on
+        else {
+            // if IP address is valid
+            if(checkIPAddress(ipInput)) {
+                updateIpAddress(ipInput);
+                updateTargetLockIP();   // set targetLockIP to true
+                disableIPURLFields();   // lock out IP and URL fields
+                document.getElementById('url-input').value = "";    // clear URL field
+                updateTargetURL("");    // update targetURL value
+                document.getElementById('dos-lock-url').disabled = true;    // lock url button
+                document.getElementById('dos-lock-ip').textContent = "Unlock IP";   // change lock ip button => unlock ip button
+            }
+            // else IP address invalid
+            else {
+                // inform user somehow
+            }
         }
     }
 
+    function lockURLTarget() {
+        const urlInput = document.getElementById('url-input').value.trim(); // store inputted URL
+
+        // if isDisabled is true -> user wants to unlock, trigger statements
+        if(targetLockURL) {
+            enableIPURLFields();    // enable text fields
+            updateTargetLockURL();  // set targetLockURL to false
+            document.getElementById('dos-lock-ip').disabled = false;    // unlock ip button
+            document.getElementById('dos-lock-url').textContent = "Lock URL";   // change unlock url button => lock url button
+        }
+        else {
+            if(checkTargetURL(urlInput)) {
+                updateTargetURL(urlInput); // update URL
+                updateTargetLockURL();  // set targetLockURL to true
+                disableIPURLFields();   // lock out IP and URL fields
+                document.getElementById('ip-input').value = "";         // clear IP field
+                updateIpAddress("");    // update ipAddress value
+                document.getElementById('dos-lock-ip').disabled = true; // lock ip button
+                document.getElementById('dos-lock-url').textContent = "Unlock URL";  // change unlock url button => lock url button
+            }
+            else {
+                // invalid URL
+                // inform user somehow
+            }
+        }
+
+    }
+
+    function disableIPURLFields() {
+        document.getElementById('ip-input').disabled = true;    // lock out IP field
+        document.getElementById('url-input').disabled = true;   // lock out URL field
+    }
+
+    function enableIPURLFields() {
+        document.getElementById('ip-input').disabled = false;    // lock out IP field
+        document.getElementById('url-input').disabled = false;   // lock out URL field
+    }
+
+    function lockFullConfig() {
+        const messageValue = document.getElementById('message-input').value;
+        const methodValue = document.getElementById('method-input').value;
+        const portNumValue = document.getElementById('port-input').value;
+        const speedValue = document.getElementById('speed-input').value;
+        const threadsValue = document.getElementById('threads-input').value;
+        const timeoutValue = document.getElementById('timeout-input').value;
+        const wfrValue = document.getElementById('wfr-input').value
+
+        // user wants to unlock fullTargetLock
+        if (fullTargetLock) {
+            unlockInputFields();
+            updateFullTargetLock();
+        }
+        // else if targetLockIP and targetLockURL are both equal to each other -> 
+        // not target lock or error, can't establish full lock, inform user
+        else if(targetLockIP === targetLockURL) {
+            // placeholder
+        }
+        // else, valid target lock on either IP or URL -> good to go
+        else {
+            // if all other parameters are valid, lock full config
+            if(verifyConfigElements(messageValue, methodValue, portNumValue, speedValue, threadsValue, timeoutValue, wfrValue))
+            {
+                lockInputFields();          // lock input fields from changing
+                updateFullTargetLock();     // set fullTargetLock to True
+                updateMessage(messageValue);    // update message
+                updateMethod(methodValue);      // update method
+                updatePortNumber(portNumValue); // update portNum 
+                updateSpeed(speedValue);        // update speed
+                updateThreads(threadsValue);    // update threads
+                updateTimeout(timeoutValue);    // update timeout
+                updateWaitForReply(wfrValue);   // update waitForReply
+            }
+            // else, invalid configuration -> do nothing
+            else {
+    
+            }
+        }
+    }
+
+    // verifies DOS configuration is valid
+    function verifyConfigElements(message, method, portNum, speed, threads, timeout) {
+        const validMessage = checkMessage(message);       // check message
+        const validMethod = checkMethod(method);          // check method
+        const validPortNum = checkPortNumber(portNum);    // check port number
+        const validSpeed = checkSpeed(speed);             // check speed
+        const validThreads = checkThreads(threads);       // check threads
+        const validTimeout = checkTimeout(timeout);       // checks timeout
+        
+        console.log("attempting to verify");
+        if(validMessage && validMethod && validPortNum && validSpeed && validThreads && validTimeout) {
+            console.log('All valid');
+            return true;
+        }
+        else {
+            console.log('Not all valid');
+            console.log("Message " + validMessage);
+            console.log("Method " + validMethod);
+            console.log("Port Num " + validPortNum);
+            console.log("Speed " + validSpeed);
+            console.log("Threads " + validThreads);
+            console.log("Timeout " + validTimeout);
+            // dos configuration is invalid
+            return false;
+        }
+    }
+
+    // locks all input fields
+    // also disables button for unlocking URL or unlocking IP (whichever is currently enabled)
+    function lockInputFields() {
+        document.getElementById('message-input').disabled = true;
+        document.getElementById('method-input').disabled = true;
+        document.getElementById('port-input').disabled = true;
+        document.getElementById('speed-input').disabled = true;
+        document.getElementById('threads-input').disabled = true;
+        document.getElementById('timeout-input').disabled = true;
+        document.getElementById('wfr-input').disabled = true;
+
+        if(targetLockIP) {
+            document.getElementById('dos-lock-ip').disabled = true;
+        }
+        else if(targetLockURL) {
+            document.getElementById('dos-lock-url').disabled = true;
+        }
+
+        document.getElementById('dos-lock-config').disabled = false;
+        document.getElementById('dos-lock-config').textContent = "Unlock Config";
+    }
+
+    // unlocks all input fields exceot for IP & URL
+    function unlockInputFields() {
+        document.getElementById('message-input').disabled = false;
+        document.getElementById('method-input').disabled = false;
+        document.getElementById('port-input').disabled = false;
+        document.getElementById('speed-input').disabled = false;
+        document.getElementById('threads-input').disabled = false;
+        document.getElementById('timeout-input').disabled = false;
+        document.getElementById('wfr-input').disabled = false;
+
+        if(targetLockIP) {
+            document.getElementById('dos-lock-ip').disabled = false;
+        }
+        else if(targetLockURL) {
+            document.getElementById('dos-lock-url').disabled = false;
+        }
+
+        document.getElementById('dos-lock-config').disabled = false;
+        document.getElementById('dos-lock-config').textContent = "Lock Config";
+    }
+
+    // https://medium.com/@ozhanli/passing-data-from-child-to-parent-components-in-react-e347ea60b1bb    
+
+
+    const handleSendConfig = (event) => {
+        // full target lock is established and dos attack hasn't been added, send data
+        if (fullTargetLock && !dosAdded) {
+            props.sendDoSConfig(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply, !dosAdded);
+            document.getElementById('add-dos-config').textContent = 'Remove DoS Configuration from Simulation'
+            document.getElementById('dos-lock-config').disabled = true;
+            enableDoSAdded();
+        }
+        // full target lock is established and dos attack is alread added, user wants to remove attack
+        else if (fullTargetLock && dosAdded){
+            props.sendDoSConfig('', '', '', 'none', 0, '', 0, 0, false, !dosAdded);
+            document.getElementById('add-dos-config').textContent = 'Add DoS Configuration to Simulation'
+            document.getElementById('dos-lock-config').disabled = false;
+            disableDoSAdded();
+        }
+    }
+
+    
 
     if(props.isDoSVisible == true)
     {
-        return( <>
+        return( <>  
                     <div className='DOS_Configs'>
-                        <div className='dos-ip-container'>
-                            <label>IP Address: </label>
-                            <input type='text'></input>
-                        </div>
-                        <div className='dos-port-container'>
-                            <label>Port Number: </label>
-                            <input type='number'></input>
-                        </div>
-                        <div className='dos-method-container'>
-                            <label>Select Method (UDP or TCP): </label>
-                            <select className='method-select'>
-                                <option value=""></option>
-                                <option value="UDP">UDP</option>
-                                <option value="TCP">TCP</option>
-                            </select>
-                        </div>
-                        <div className='dos-timeout-container'>
-                            <label>Timeout: </label>
-                            <input type="text"></input>
-                        </div>
-                        <div className='dos-wfr-container'>
-                            <lable>Wait For Reply: </lable>
-                            <input type="checkbox"></input>
-                        </div>
-                        <div className='dos-speed-container'>
-                            <label>Speed: {speed}</label>
-                            <input type="number"></input>
-                        </div>
-                        <div className='dos-message-container'>
-                            <label>Message: {message}</label>
-                            <input type='text'></input>
-                        </div>
-                        <button className='dos-save-config' onClick={saveConfig}>Save Config</button>
+                        <form>
+                            <div className='dos-input-container'>
+                                <label>Target URL: </label>
+                                <input type='text' id='url-input'></input>
+                            </div>
+                            <button className='dos-button-locks' id='dos-lock-url' onClick={handleLockURLTarget}>Lock URL</button>
+                            <div className='dos-input-container'>
+                                <label>IP Address: </label>
+                                <input type='text' id='ip-input'></input>
+                            </div>
+                            <button className='dos-button-locks' id='dos-lock-ip' onClick={handleLockIPTarget}>Lock IP</button>
+                            <div className='dos-input-container'>
+                                <label>Port Number: </label>
+                                <input type='number' id='port-input'></input>
+                            </div>
+                            <div className='dos-select-container'>
+                                <label>Select Method (UDP or TCP): </label>
+                                <select id='method-input' onChange={handleMethodChange}>
+                                    <option value="none"></option>
+                                    <option value="UDP">UDP</option>
+                                    <option value="TCP">TCP</option>
+                                </select>
+                            </div>
+                            <div className='dos-input-container'>
+                                <label>Threads: </label>
+                                <input type='number' id='threads-input'></input>
+                            </div>
+                            <div className='dos-input-container'>
+                                <label>Timeout: </label>
+                                <input type="text" id='timeout-input'></input>
+                            </div>
+                            <div className='dos-input-container'>
+                                <label>Wait For Reply: </label>
+                                <input type="checkbox" id='wfr-input'></input>
+                            </div>
+                            <div className='dos-input-container'>
+                                <label>Speed: </label>
+                                <input type="number" id='speed-input'></input>
+                            </div>
+                            <div className='dos-input-container'>
+                                <label>Message: {message}</label>
+                                <input type='text' id='message-input'></input>
+                            </div>
+                            <button className='dos-button-locks' id='dos-lock-config' onClick={handleLockFullConfig}>Lock Config</button>
+                        </form>
+                        <button className='dos-button-locks' id='add-dos-config' onClick={handleSendConfig} disabled={!fullTargetLock}>
+                            Add DoS Configuration to Simulation
+                        </button>
                     </div>
                 </>
         );

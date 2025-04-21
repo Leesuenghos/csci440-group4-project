@@ -1,5 +1,6 @@
 /* 
 @authors: Alex Tzonis
+@date (last updated): 4/17/2025 
 
 colors: 
 * gray: #3C3C3C
@@ -142,6 +143,32 @@ body {
   grid-row-end: 5;
 }
 
+.attack-selector-input {
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: white;
+  margin: 2px;
+  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  text-align: center;
+}
+
+.attack-info-container {
+  padding: 5px;
+}
+
+.attack-info-labels {
+  background-color: #3C3C3C;
+  border: 3px solid black;
+  color: white;
+  padding: 5px;
+}
+
+
+
+
 /*
 ---------------------------------------------------------------------------------------------------------------------------
 ConfigBF
@@ -160,25 +187,19 @@ ConfigDoS
 ---------------------------------------------------------------------------------------------------------------------------
 */
 
-
-
-.dos-ip-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-ip-container input{
+.dos-select-input {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
-.dos-port-container{
+.dos-input-container, .dos-select-container {
   background-color: #202020;
   border: 2px solid black;
   border-radius: 15px;
@@ -186,84 +207,52 @@ ConfigDoS
   padding: 2px;
 }
 
-.dos-port-container input{
+.dos-input-container input[type="text"] {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
 }
 
-.dos-method-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-method-container input{
+.dos-input-container input[type="number"] {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
 }
 
-.dos-timeout-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-timeout-container input{
+.dos-input-container input[type="checkbox"] {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  cursor: pointer;
   margin: 2px;
   padding: 2px;
 }
 
-.dos-wfr-container{
+.dos-input-container input[type="checkbox"]:disabled:hover {
+  cursor: auto;
+}
+
+.dos-input-container input:disabled {
   background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
+  color: #3C3C3C;
 }
 
-.dos-speed-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-speed-container input{
+.dos-select-container select {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
-}
-
-.dos-message-container{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-message-container input{
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
 .dos-save-config{
@@ -278,60 +267,258 @@ ConfigDoS
   text-align: center;
 }
 
+.dos-button-locks {
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: white;
+  margin: 2px;
+  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
+}
+
+.dos-button-locks:disabled {
+  color: #3C3C3C;
+}
+
+.dos-button-locks:hover {
+  cursor: pointer;
+}
+
+.dos-button-locks:hover:disabled {
+  cursor: auto;
+}
+
 /*
 ---------------------------------------------------------------------------------------------------------------------------
 ConfigPhish
 ---------------------------------------------------------------------------------------------------------------------------
 */
 
-.ph-email-container{
+.phish-configs {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+}
+
+.ph-input-container {
   background-color: #202020;
-  border: 2px solid black;
+  border: 2px solid black; 
   border-radius: 15px;
   margin: 2px;
   padding: 2px;
 }
 
-.ph-email-container input{
+.ph-input-container button{
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: white;
+  margin: 2px;
+  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
+}
+
+.ph-input-container input {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
   margin: 2px;
   padding: 2px;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
-.ph-subject-container{
-  background-color: #202020;
+.ph-input-container input[type="checkbox"] {
+  background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
+  cursor: pointer;
   margin: 2px;
   padding: 2px;
 }
 
-.ph-subject-container input{
+.ph-input-container input[type="checkbox"]:disabled:hover {
+  cursor: auto;
+}
+
+.ph-input-container input:disabled {
+  background-color: #202020;
+  color: #3C3C3C;
+}
+
+#ph-email-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#message-input-ta {
   background-color: #3C3C3C;
   border: 2px solid black;
   border-radius: 15px;
   margin: 2px;
-  padding: 2px;
+  padding: 6px;
+  resize: none;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  text-align: left;
 }
 
-.ph-message-container{
+#message-input-ta:disabled {
+  background-color: #202020;
+  color: #3C3C3C;
+}
+
+#ph-email-settings{
+  margin: 20px;
+  padding: 20px;
+}
+
+#ph-email-list-container {
+  margin: 20px;
+  padding: 20px;
+}
+
+#ph-email-list {
+  list-style-type: none;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  text-align: left;
+  background-color: #202020;
+  border: 2px solid black;
+  padding: 5px;
+}
+
+#email-row {
+  border: 1px solid black;
+  padding: 3px;
+}
+
+#ph-targetTable-container {
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  text-align: center;
+  background-color: #202020;
+  border: 2px solid black;
+}
+
+#ph-targetTable-container table{
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#ph-targetTable-container td, th {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#ph-targetTable-container tr {
+  background-color: #3C3C3C;
+}
+
+#ph-targetTable-container tr:nth-child(even) {
+  background-color: #4D4D4D;
+}
+
+.ph-input-button {
   background-color: #202020;
   border: 2px solid black;
   border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
-.ph-message-container input{
+.ph-input-button:hover {
+  cursor: pointer;
+}
+
+.ph-input-button:disabled {
+  color: #3C3C3C;
+}
+
+.ph-input-button:disabled:hover {
+  cursor: auto;
+}
+
+.ph-removeTarget-button {
   background-color: #3C3C3C;
   border: 2px solid black;
-  border-radius: 15px;
+  color: white;
   margin: 2px;
   padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
 }
 
+.ph-removeTarget-button:nth-child(even) {
+  background-color: #4D4D4D;
+}
+
+.ph-delete-target {
+  font-style: bold;
+}
+
+.ph-delete-target:hover {
+  cursor:pointer;
+}
+
+.ph-delete-target {
+  font-style: bold;
+}
+
+.ph-target-inputFields:disabled:hover {
+  cursor: auto;
+}
+
+.ph-target-inputFields:disabled {
+  background-color: #202020;
+  color: #3C3C3C;
+}
+
+.ph-target-inputButton {
+  background-color: #202020;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: white;
+  margin: 2px;
+  padding: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  text-align: center;
+}
+
+.ph-target-inputButton:disabled {
+  background-color: #202020;
+  color: #3C3C3C;
+}
+
+.ph-target-inputButton:disabled:hover {
+  cursor: auto;
+}
+
+/*
+table tbody { height:300px; overflow-y:scroll; display:block; }
+table thead { display:block; }
+*/
 
 /*
 ---------------------------------------------------------------------------------------------------------------------------
