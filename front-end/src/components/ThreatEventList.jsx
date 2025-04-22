@@ -9,10 +9,10 @@ function ThreatEventList() {
       <ul>
         {events
           ? events.map((event, index) => (
-              <li key={index}>
-                {event.type} - {event.ip} ({event.timestamp})
-              </li>
-            ))
+            <li key={index}>
+              {event.type} - {event.ip} ({event.event_time.toLocaleString()})
+            </li>
+          ))
           : "Waiting for events..."}
       </ul>
     </div>

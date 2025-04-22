@@ -1,5 +1,5 @@
 /* 
-@authors: Alex Tzonis
+@authors: Alex Tzonis & Jacob Kennedy
 @date (last updated): 4/17/2025 
 
 colors: 
@@ -12,572 +12,477 @@ etamu colors:
   * Dark Blue: #002446
 */
 
-body {
-  background-color: #202020;
-  color: white; 
+:root {
+  /* primary palette */
+  --dark-bg: #1b1b1b;
+  --mid-bg: #2a2a2a;
+  --light-bg: #333333;
+  --accent-main: #004a8f;
+  --accent-glow: rgba(0, 74, 143, 0.6);
+  --text-main: #e0e0e0;
+  --text-muted: #888888;
+  --border-color: #444444;
+  --radius: 0.25rem;
+  --gap: 0.75rem;
+  --transition: 0.2s ease-in-out;
+  --font: 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+/* reset */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
+  box-sizing: border-box;
 }
 
-.attack-controls-container {
-  background-color: #3C3C3C;
-  border: 5px solid black;
-  border-radius: 15px;
-  display: flex-start;
-  margin: 20px;
-  padding: 20px;
-
-  /*
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 3;
-  */
+html,
+body {
+  height: 100%;
 }
 
-.attack-select-container {
-  align-items: flex-start;
-  margin: 20px;
-  padding: 20px;
+body {
+  background: var(--dark-bg);
+  color: var(--text-main);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' opacity='0.02'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-.attack-types-container {
-  background-color: #3C3C3C;
-  border: 5px solid black;
-  border-radius: 15px;
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--dark-bg);
+  color: var(--text-main);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' opacity='0.03'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Navbar */
+.navbar-container {
   display: flex;
-  justify-content: stretch;
-  align-items: center;
-  margin: 20px;
-  padding: 20px;
-
-  /*
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 3;
-  grid-row-end: 5;
-  */
+  justify-content: center;
+  background: var(--mid-bg);
+  padding: var(--gap);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-
-.attack-config-container {
-  margin: 20px;
-  padding: 20px;
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: var(--gap);
 }
 
-.add-config-button{
-  background-color: gray;
-  border: 1px solid black;
-  border-radius: 15px;
+.nav-link {
+  padding: 0.5rem 1rem;
+  color: var(--text-main);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.nav-link:hover {
+  background: var(--light-bg);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.nav-link.active {
+  background: var(--accent-main);
+  border-color: var(--accent-main);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Layout Sections */
+.home-container,
+.attack-controls-container,
+.attack-types-container,
+.event-panel-container {
+  background: var(--light-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  margin: var(--gap);
+  padding: var(--gap);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Attack Controls */
+.attack-controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  justify-content: center;
+}
+
+.attack-controls-container button {
+  background: var(--accent-main);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  color: var(--text-main);
+  font-weight: 600;
   cursor: pointer;
-  margin: 5px;
-  padding: 5px;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.add-config-button:hover{
-  background-color: green;
-  transition: 0.5s ease;
+.attack-controls-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
-.execute-sim-button {
-  background-color: green;
-  border: 1px solid black;
-  border-radius: 15px;
-  cursor: pointer;
-  margin: 5px;
-  padding: 5px;
-  transition: 0.5s ease;
+/* Attack Types Selector */
+.attack-types-container {
+  gap: var(--gap);
 }
 
-.execute-sim-button:hover {
-  background-color: lightgreen;
-  transition: 0.5s ease;
-}
-
-.pause-sim-button {
-  background-color: darkgray;
-  border: 1px solid black;
-  border-radius: 15px;
-  cursor: pointer;
-  margin: 5px;
-  padding: 5px;
-  transition: 0.5s ease;
-}
-
-.pause-sim-button:hover {
-  background-color: lightgrey;
-  transition: 0.5s ease;
-}
-
-.stop-sim-button {
-  background-color: red;
-  border: 1px solid black;
-  border-radius: 15px;
-  cursor: pointer;
-  margin: 5px;
-  padding: 5px;
-  transition: 0.5s ease;
-}
-
-.stop-sim-button:hover {
-  background-color: lightcoral;
-  transition: 0.5s ease;
-}
-
-.event-panel-container{
-  background-color: #3C3C3C;
-  border: 5px solid black;
-  border-radius: 15px;
-  display: flex-start;
-  justify-content: stretch;
-  align-items: center;
-  margin: 20px;
-  padding: 20px;
-
-  grid-column-start: 3;
-  grid-column-end: 5;
-  grid-row-start: 1;
-  grid-row-end: 5;
+.attack-type-selector-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  justify-content: center;
+  margin-bottom: var(--gap);
 }
 
 .attack-selector-input {
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  text-align: center;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--mid-bg);
+  color: var(--text-main);
+  transition: box-shadow var(--transition);
 }
 
-.attack-info-container {
-  padding: 5px;
+.attack-selector-input:focus {
+  outline: none;
+  box-shadow: 0 0 6px var(--accent-glow);
 }
 
-.attack-info-labels {
-  background-color: #3C3C3C;
-  border: 3px solid black;
-  color: white;
-  padding: 5px;
-}
-
-
-
-
-/*
----------------------------------------------------------------------------------------------------------------------------
-ConfigBF
----------------------------------------------------------------------------------------------------------------------------
-*/
-
-
-
-
-
-
-
-/*
----------------------------------------------------------------------------------------------------------------------------
-ConfigDoS
----------------------------------------------------------------------------------------------------------------------------
-*/
-
-.dos-select-input {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
-}
-
-.dos-input-container, .dos-select-container {
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-input-container input[type="text"] {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-input-container input[type="number"] {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-}
-
-.dos-input-container input[type="checkbox"] {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
+/* shared option button */
+.option-button {
+  background: var(--mid-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  color: var(--text-main);
+  padding: 0.25rem 0.5rem;
   cursor: pointer;
-  margin: 2px;
-  padding: 2px;
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  font-size: 0.8rem;
 }
 
-.dos-input-container input[type="checkbox"]:disabled:hover {
-  cursor: auto;
+.option-button:hover {
+  background: var(--light-bg);
+  box-shadow: 0 0 6px var(--accent-glow);
+  transform: translateY(-1px);
 }
 
-.dos-input-container input:disabled {
-  background-color: #202020;
-  color: #3C3C3C;
-}
-
-.dos-select-container select {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
-}
-
-.dos-save-config{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
-}
-
-.dos-button-locks {
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
-}
-
-.dos-button-locks:disabled {
-  color: #3C3C3C;
-}
-
-.dos-button-locks:hover {
-  cursor: pointer;
-}
-
-.dos-button-locks:hover:disabled {
-  cursor: auto;
-}
-
-/*
----------------------------------------------------------------------------------------------------------------------------
-ConfigPhish
----------------------------------------------------------------------------------------------------------------------------
-*/
-
-.phish-configs {
-  display: flex;
-  justify-content: stretch;
-  align-items: center;
-}
-
-.ph-input-container {
-  background-color: #202020;
-  border: 2px solid black; 
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-}
-
-.ph-input-container button{
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
-}
-
-.ph-input-container input {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 2px;
-  color: white;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
-}
-
-.ph-input-container input[type="checkbox"] {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  cursor: pointer;
-  margin: 2px;
-  padding: 2px;
-}
-
-.ph-input-container input[type="checkbox"]:disabled:hover {
-  cursor: auto;
-}
-
-.ph-input-container input:disabled {
-  background-color: #202020;
-  color: #3C3C3C;
-}
-
-#ph-email-container {
-  align-items: center;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-#message-input-ta {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  border-radius: 15px;
-  margin: 2px;
-  padding: 6px;
-  resize: none;
-  color: white;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  text-align: left;
-}
-
-#message-input-ta:disabled {
-  background-color: #202020;
-  color: #3C3C3C;
-}
-
-#ph-email-settings{
-  margin: 20px;
-  padding: 20px;
-}
-
-#ph-email-list-container {
-  margin: 20px;
-  padding: 20px;
-}
-
-#ph-email-list {
-  list-style-type: none;
-  color: white;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  text-align: left;
-  background-color: #202020;
-  border: 2px solid black;
-  padding: 5px;
-}
-
-#email-row {
-  border: 1px solid black;
-  padding: 3px;
-}
-
-#ph-targetTable-container {
-  color: white;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  text-align: center;
-  background-color: #202020;
-  border: 2px solid black;
-}
-
-#ph-targetTable-container table{
-  border-collapse: collapse;
+/* ConfigExploit Layout */
+form.exploit-config {
   width: 100%;
-  table-layout: fixed;
+  display: grid;
+  grid-template-columns: 5fr 3fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "settings status"
+    "submit   submit";
+  gap: var(--gap);
+  background: var(--mid-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: var(--gap);
 }
 
-#ph-targetTable-container td, th {
-  border: 1px solid black;
-  text-align: left;
-  padding: 8px;
-  text-overflow: ellipsis;
-  overflow: hidden;
+.error {
+  grid-column: 1 / -1;
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-bottom: var(--gap);
 }
 
-#ph-targetTable-container tr {
-  background-color: #3C3C3C;
+.exploit-settings {
+  grid-area: settings;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
 }
 
-#ph-targetTable-container tr:nth-child(even) {
-  background-color: #4D4D4D;
+.exploit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.ph-input-button {
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
+.exploit-field label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-.ph-input-button:hover {
+.exploit-field input,
+.exploit-field select,
+.exploit-field textarea {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--light-bg);
+  color: var(--text-main);
+  transition: box-shadow var(--transition);
+}
+
+.exploit-field input:focus,
+.exploit-field select:focus,
+.exploit-field textarea:focus {
+  outline: none;
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+.exploit-status {
+  grid-area: status;
+  background: var(--mid-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.exploit-status-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.exploit-status p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.exploit-submit {
+  grid-area: submit;
+}
+
+.exploit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--accent-main);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-main);
+  font-weight: 600;
   cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.ph-input-button:disabled {
-  color: #3C3C3C;
+.exploit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
-.ph-input-button:disabled:hover {
-  cursor: auto;
+@media (max-width: 800px) {
+  form.exploit-config {
+    grid-template-columns: 1fr;
+    grid-template-areas: "settings" "status" "submit";
+  }
+
+  .exploit-settings {
+    grid-template-columns: 1fr;
+  }
 }
 
-.ph-removeTarget-button {
-  background-color: #3C3C3C;
-  border: 2px solid black;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
+
+
+/* ConfigDoS Form */
+form.dos-config {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: var(--gap);
+  background: var(--mid-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: var(--gap);
+}
+
+
+form.dos-config .error {
+  grid-area: status;
+  color: #ff6b6b;
   text-align: center;
 }
 
-.ph-removeTarget-button:nth-child(even) {
-  background-color: #4D4D4D;
+.dos-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.ph-delete-target {
-  font-style: bold;
+.dos-field label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-.ph-delete-target:hover {
-  cursor:pointer;
+/* grid areas */
+form.dos-config .dos-field:nth-of-type(1) {
+  grid-area: field-target;
 }
 
-.ph-delete-target {
-  font-style: bold;
+form.dos-config .dos-field:nth-of-type(1) label {
+  grid-area: label-target;
 }
 
-.ph-target-inputFields:disabled:hover {
-  cursor: auto;
+form.dos-config .dos-field:nth-of-type(2) {
+  grid-area: field-port;
 }
 
-.ph-target-inputFields:disabled {
-  background-color: #202020;
-  color: #3C3C3C;
+form.dos-config .dos-field:nth-of-type(2) label {
+  grid-area: label-port;
 }
 
-.ph-target-inputButton {
-  background-color: #202020;
-  border: 2px solid black;
-  border-radius: 15px;
-  color: white;
-  margin: 2px;
-  padding: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 9px;
-  text-align: center;
+form.dos-config .dos-field:nth-of-type(3) {
+  grid-area: field-proto;
 }
 
-.ph-target-inputButton:disabled {
-  background-color: #202020;
-  color: #3C3C3C;
+form.dos-config .dos-field:nth-of-type(3) label {
+  grid-area: label-proto;
 }
 
-.ph-target-inputButton:disabled:hover {
-  cursor: auto;
+form.dos-config .dos-field:nth-of-type(4) {
+  grid-area: field-threads;
 }
 
-/*
-table tbody { height:300px; overflow-y:scroll; display:block; }
-table thead { display:block; }
-*/
-
-/*
----------------------------------------------------------------------------------------------------------------------------
-EventLogs
----------------------------------------------------------------------------------------------------------------------------
-*/
-
-.event-table-container{
-  background-color: blue;
+form.dos-config .dos-field:nth-of-type(4) label {
+  grid-area: label-threads;
 }
 
-.event-table{
-  background-color: #202020;
-  border: 3px solid black;
+form.dos-config .dos-field:nth-of-type(5) {
+  grid-area: field-duration;
+}
+
+form.dos-config .dos-field:nth-of-type(5) label {
+  grid-area: label-duration;
+}
+
+.dos-field input,
+.dos-field select {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--light-bg);
+  color: var(--text-main);
+  transition: box-shadow var(--transition);
+}
+
+.dos-field input:focus,
+.dos-field select:focus {
+  outline: none;
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+.dos-button {
+  grid-area: button;
+  justify-self: start;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-main);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-main);
+  cursor: pointer;
+  margin-top: var(--gap);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.dos-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+
+/* right status sidebar */
+.dos-status {
+  background: var(--mid-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  width: 100%;
+}
+
+.dos-status p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.dos-status-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  form.dos-config {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "label-target" "field-target"
+      "label-port" "field-port"
+      "label-proto" "field-proto"
+      "label-threads" "field-threads"
+      "label-duration" "field-duration"
+      ". button"
+      "status";
+  }
+
+  .dos-status p {
+    flex: 1 1 100%;
+  }
+}
+
+/* EventLogs */
+div.event-logs-container {
   overflow-x: auto;
-  overflow-y: auto;
+}
+
+.event-table {
   width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--gap);
 }
 
-.event-table tr{
-  background-color: #3C3C3C;
+.event-table th,
+.event-table td {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
 }
 
-.event-table th{
-  font-size: 10px;
-  padding: 5px;
+.event-table th {
+  background: var(--accent-main);
+  color: var(--text-main);
 }
 
+.event-table tr:nth-child(even) {
+  background: var(--mid-bg);
+}
 
-/*
----------------------------------------------------------------------------------------------------------------------------
-Navbar & Header
----------------------------------------------------------------------------------------------------------------------------
-*/
-
-.navbar-container{
-  display: flex;
-  justify-content: right;
-  margin: 0;
-  padding: 5px;
+/* footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
+  height: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  padding: 0 var(--gap);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  background: var(--light-bg);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
 }
-
-header{
-  align-items: center;
-  background-color: #3C3C3C;
-  border-bottom: 5px solid black;
-  display: flex;
-  margin: 0;
-  padding-left: 10px;
-  padding-right: 10px;
-  justify-content: left;
-}
-
-#navbar-buttons{
-  background-color: #3C3C3C;
-  border: 3px solid black;
-  color: white;
-}
-
-
-

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export function Home() {
-  return( <>
-          </>);
+export default function Home() {
+  return (<>
+  </>);
 }

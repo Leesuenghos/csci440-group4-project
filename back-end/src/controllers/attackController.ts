@@ -17,7 +17,7 @@ export async function startDDoS(req: Request, res: Response) {
     const success = await startDDoSAttack({
         targetIP,
         port: parseInt(port, 10),
-        method: method as 'TCP' | 'UDP' | 'HTTP',
+        method: method as 'TCP' | 'UDP',
         threads: parseInt(threads, 10),
         duration: parseInt(duration, 10)
     });
@@ -36,9 +36,15 @@ export async function stopDDoS(req: Request, res: Response) {
     });
 }
 
+
 export async function getDDoSAttackStatus(req: Request, res: Response) {
-    return res.json(getDDoSStatus());
+    const status = getDDoSStatus()
+    return res.json({
+        success: true,
+        data: status,
+    })
 }
+
 
 // Metasploit exploit endpoints
 export async function launchExploit(req: Request, res: Response) {
@@ -73,5 +79,9 @@ export async function stopExploitExecution(req: Request, res: Response) {
 }
 
 export async function getExploitExecutionStatus(req: Request, res: Response) {
-    return res.json(getExploitStatus());
+    const status = getExploitStatus()
+    return res.json({
+        success: true,
+        data: status,
+    })
 }

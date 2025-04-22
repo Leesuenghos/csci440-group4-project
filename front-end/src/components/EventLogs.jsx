@@ -1,71 +1,48 @@
 
 /*
-@authors: Alex Tzonis
-*/ 
+@authors: Alex Tzonis & Jacob Kennedy
+*/
 
-import { useState } from "react";
+import React, { useEffect, useState } from 'react'
+import { apiGet } from '../services/api'
 
-function EventLogs() {
-  const [events, setEvents] = useState([
-    { type: "DDoS", ip: "192.168.1.1", timestamp: "2025-03-20 10:00" },
-    { type: "Phishing", ip: "192.168.1.2", timestamp: "2025-03-20 10:05" },
-    { type: "Malware", ip: "192.168.1.3", timestamp: "2025-03-20 10:10" }
-  ]);
+export default function EventLogs() {
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const [filterType, setFilterType] = useState("");
-  const [sortBy, setSortBy] = useState("");
+  useEffect(() => {
+    apiGet('/threats')
+      .then(res => setEvents(res))
+      .finally(() => setLoading(false))
+  }, [])
 
-  const filteredEvents = events.filter((event) =>
-    filterType ? event.type === filterType : true
-  );
+  const threatTypeMap = {
+    'brute-force': 'Brute Force Attack',
+    'ddos_simulation': 'DDoS Attack',
+    'sql-injection': 'SQL Injection',
+    'xss': 'Cross-Site Scripting',
+    'malware': 'Malware Detection',
+    'exploit_attempt': 'Exploit Attempt',
+  }
 
-  const sortedEvents = [...filteredEvents].sort((a, b) => {
-    if (sortBy === "time") return new Date(a.timestamp) - new Date(b.timestamp);
-    if (sortBy === "type") return a.type.localeCompare(b.type);
-    return 0;
-  });
-
+  if (loading) return <p>Waiting for events...</p>
   return (
-    <div>
-      <h2>Event Logs</h2>
-
-      <div>
-        <label>Filter by Type:</label>
-        <select onChange={(e) => setFilterType(e.target.value)}>
-          <option value="">All</option>
-          <option value="DDoS">DDoS</option>
-          <option value="Phishing">Phishing</option>
-          <option value="Malware">Malware</option>
-        </select>
-
-        <label>Sort by:</label>
-        <select onChange={(e) => setSortBy(e.target.value)}>
-          <option value="">None</option>
-          <option value="time">Time</option>
-          <option value="type">Type</option>
-        </select>
-      </div>
-
-      <table>
+    <div className="event-logs-container">
+      <table className="event-table">
         <thead>
-          <tr>
-            <th>Type</th>
-            <th>IP Address</th>
-            <th>Timestamp</th>
-          </tr>
+          <tr><th>Threat Type</th><th>Source IP</th><th>Time</th><th>Severity</th></tr>
         </thead>
         <tbody>
-          {sortedEvents.map((event, index) => (
-            <tr key={index}>
-              <td>{event.type}</td>
-              <td>{event.ip}</td>
-              <td>{event.timestamp}</td>
+          {events.map((e, i) => (
+            <tr key={i}>
+              <td>{threatTypeMap[e.type]}</td>
+              <td>{e.source_ip}</td>
+              <td>{new Date(e.event_time).toLocaleString()}</td>
+              <td>{e.severity.toUpperCase()}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
+  )
 }
-
-export default EventLogs;

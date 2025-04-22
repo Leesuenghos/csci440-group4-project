@@ -1,6 +1,6 @@
 
-export function AnalysisPage() {
-  return( <>
-            <p>Hello from Analysis</p>
-          </>)
+export default function AnalysisPage() {
+  return (<>
+    <p>Hello from Analysis</p>
+  </>)
 }
