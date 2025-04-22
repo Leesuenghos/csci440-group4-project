@@ -9,6 +9,8 @@ export function setupSocket(socketServer: Server) {
 
     io.on('connection', async (socket: Socket) => {
         console.log('Client connected:', socket.id);
+        socket.join('ddos');
+        socket.emit('joined', 'ddos');
 
         // Send initial threat data on connection
         const initialEvents = await getAllEvents();

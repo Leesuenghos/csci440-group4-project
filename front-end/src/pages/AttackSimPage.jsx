@@ -49,8 +49,8 @@ export function AttackSimPage() {
   // responsible for "retrieving" passed values from ConfigDoS
   const handleDataFromDoS = (targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply, addingDos) => {
     // update dosAttack with new values
-    updateDoSAttack(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply); 
-    if(addingDos) {
+    updateDoSAttack(targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply);
+    if (addingDos) {
       enableDoSReady(); // if the user is adding the attack, set dosReady to true
     }
     else {
@@ -59,11 +59,12 @@ export function AttackSimPage() {
   }
 
   // updates the values of dosAttack
-  const updateDoSAttack = (targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply) => 
-  { 
-    setDoSAttack({URL: targetURL, IP: ipAddress, message: message, method: method, 
-      portNumber: portNum, speed: speed, threads: threads, timeout: timeout, waitForReply: waitForReply}); 
-  } 
+  const updateDoSAttack = (targetURL, ipAddress, message, method, portNum, speed, threads, timeout, waitForReply) => {
+    setDoSAttack({
+      URL: targetURL, IP: ipAddress, message: message, method: method,
+      portNumber: portNum, speed: speed, threads: threads, timeout: timeout, waitForReply: waitForReply
+    });
+  }
 
   // responsible for "retrieving" passed values from ConfigPhish
   const handlePhishConfig = (subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent, addingPhish) => {
@@ -71,8 +72,8 @@ export function AttackSimPage() {
   }
 
   function savePhishConfig(subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent, addingPhish) {
-    updatePhishAttack(subject, targetList, fromAddress, fromName,  doNotAddTracking, emailContent);
-    if(addingPhish) {
+    updatePhishAttack(subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent);
+    if (addingPhish) {
       enablePhishReady();   // if the user is adding the attack, set phishReady to true
     }
     else {
@@ -80,10 +81,12 @@ export function AttackSimPage() {
     }
   }
 
-  function updatePhishAttack(subject, targetList, fromAddress, fromName,  doNotAddTracking, emailContent) {
-    setPhishAttack({subject: subject, targets: targetList, fromAddress: fromAddress, fromName: fromName,  
-      dontAddTracking: doNotAddTracking, message: emailContent});
-    
+  function updatePhishAttack(subject, targetList, fromAddress, fromName, doNotAddTracking, emailContent) {
+    setPhishAttack({
+      subject: subject, targets: targetList, fromAddress: fromAddress, fromName: fromName,
+      dontAddTracking: doNotAddTracking, message: emailContent
+    });
+
     /*
     for (let i=0; i<targetList.length;i++) {
       console.log(targetList[i])
@@ -124,10 +127,10 @@ export function AttackSimPage() {
 
 
   const changeAttackStatus = (optionString) => {
-    if(optionString === "RUNNING") { setAttackStatus(optionString); }
-    else if(option === "IDLE") { setAttackStatus(optionString); }
-    else if(optionString === "PAUSED") { setAttackStatus(optionString); }
-    else {}// invalid attack status 
+    if (optionString === "RUNNING") { setAttackStatus(optionString); }
+    else if (option === "IDLE") { setAttackStatus(optionString); }
+    else if (optionString === "PAUSED") { setAttackStatus(optionString); }
+    else { }// invalid attack status 
   }
 
   function launchAttack() {
@@ -174,7 +177,7 @@ export function AttackSimPage() {
     */
 
     // if attack is idle (hasn't started)
-    if (attackStatus ==="IDLE") {
+    if (attackStatus === "IDLE") {
       // start attack
       changeAttackStatus("RUNNING");
     }
@@ -206,7 +209,7 @@ export function AttackSimPage() {
     */
 
     // if attack is idle (hasn't started)
-    if (attackStatus ==="IDLE") {
+    if (attackStatus === "IDLE") {
       // start attack
       changeAttackStatus("RUNNING");
     }
@@ -217,7 +220,7 @@ export function AttackSimPage() {
 
 
     // if attack is idle (hasn't started)
-    if (attackStatus ==="IDLE") {
+    if (attackStatus === "IDLE") {
       // start attack
       changeAttackStatus("RUNNING");
     }
@@ -226,13 +229,13 @@ export function AttackSimPage() {
 
   function pauseAttack() {
     // if attack is currently running, able to pause attack, else: nothing happens
-    if(attackStatus === "RUNNING") {
+    if (attackStatus === "RUNNING") {
       // no option to pause a phish attacking because it can't be paused
-      if(currentConfig === "dos-option") {
+      if (currentConfig === "dos-option") {
         pauseDoSAttack();
         changeAttackStatus("PAUSED");
       }
-      else if(currentConfig === "bf-option") {
+      else if (currentConfig === "bf-option") {
         pauseBFAttack();
         changeAttackStatus("PAUSED");
       }
@@ -252,13 +255,13 @@ export function AttackSimPage() {
 
   function stopAttack() {
     // if attack is currently running, able to stop attack, else: nothing happens
-    if(attackStatus === "RUNNING") {
+    if (attackStatus === "RUNNING") {
       // no option to stop a phish attacking because it can't be stopped
-      if(currentConfig === "dos-option") {
+      if (currentConfig === "dos-option") {
         stopDoSAttack();
         changeAttackStatus("IDLE");
       }
-      else if(currentConfig === "bf-option") {
+      else if (currentConfig === "bf-option") {
         stopBFAttack();
         changeAttackStatus("IDLE");
       }
@@ -274,14 +277,14 @@ export function AttackSimPage() {
     // pseudocode to stop DoS attack
   }
 
-  function toggleOffCurrentConfig(currentConfigValue){
-    if(currentConfigValue === "dos-option"){
+  function toggleOffCurrentConfig(currentConfigValue) {
+    if (currentConfigValue === "dos-option") {
       toggleDoSConfig("NONE");
     }
-    else if(currentConfigValue === "bg-option"){
+    else if (currentConfigValue === "bg-option") {
       toggleBFConfig("NONE");
     }
-    else if(currentConfigValue === "ph-option"){
+    else if (currentConfigValue === "ph-option") {
       togglePhishConfig("NONE");
     }
   }
@@ -290,75 +293,72 @@ export function AttackSimPage() {
     if (targetValue === "dos-option") {
       toggleDoSConfig(targetValue);
     }
-    else if(targetValue === "bf-option") {
+    else if (targetValue === "bf-option") {
       toggleBFConfig(targetValue);
     }
-    else if(targetValue === "ph-option") {
+    else if (targetValue === "ph-option") {
       togglePhishConfig(targetValue);
     }
   }
 
   function handleConfigToggle(event) {
-    if(event.target.value === currentConfig)
-    {
+    if (event.target.value === currentConfig) {
       // user chose the same option so don't change anything
     }
     // user chose the empty section
-    else if(event.target.value === "NONE")
-    {
+    else if (event.target.value === "NONE") {
       toggleOffCurrentConfig(currentConfig);
     }
     // user chose new config
-    else
-    {
+    else {
       toggleOffCurrentConfig(currentConfig);
       toggleNewConfig(event.target.value);
     }
   }
-  
-return( <>
-          <div className="attack-controls-container">
-            <h2>Attack Controls</h2>
-            <button className='execute-sim-button' onClick={handleLaunchAttack}>Execute Simulation</button>
-            <button className='pause-sim-button' onClick={handlePauseAttack}>Pause Simulation</button>
-            <button className='stop-sim-button' onClick={handleStopAttack}>Stop Simulation</button>
-            <div className='attack-info-container' id='dos-info-container' hidden={!dosReady}>
-              <label className='attack-info-labels' hidden={!dosAttack.IP}>IP Address: {dosAttack.IP}</label>
-              <label className='attack-info-labels' hidden={!dosAttack.URL}>URL: {dosAttack.URL}</label>
-              <label className='attack-info-labels'>Port Number: {dosAttack.portNumber}</label>
-              <label className='attack-info-labels'>Method: {dosAttack.method}</label>
-              <label className='attack-info-labels'>Threads: {dosAttack.threads}</label>
-              <label className='attack-info-labels'>Timeout: {dosAttack.timeout}</label>
-              <label className='attack-info-labels'>Speed: {dosAttack.speed}</label>
-              <label className='attack-info-labels'>Wait For Reply: {String(dosAttack.waitForReply).toUpperCase()}</label>
-              <label className='attack-info-labels'>Message: {dosAttack.message}</label>
-            </div>
-            <div className='attack-info-container' id='ph-info-container' hidden={!phishReady}>
-              <label className='attack-info-labels'>Subject: {phishAttack.subject}</label>
-              <label className='attack-info-labels'>From Address: {phishAttack.fromAddress}</label>
-              <label className='attack-info-labels'>From Name: {phishAttack.fromName}</label>
-              <label className='attack-info-labels'>Do NOT Add Tracking: {String(phishAttack.dontAddTracking).toUpperCase()}</label>          
-            </div>
-            <div className='attack-info-container' id='bf-info-container' hidden={!bfReady}>
-            </div>
-          </div>
-          <div className='attack-types-container'>
-            <div className='attack-select-container'>
-              <h2>Choose Attack</h2>
-              <select className='attack-selector-input' id="attack-type-selector" 
-                disabled={dosReady || phishReady || bfReady} onChange={handleConfigToggle}>
-                <option value="NONE"></option>
-                <option value="dos-option">Denial-of-Service Attack (DoS)</option>
-                <option value="bf-option">Brute Force Attack</option>
-                <option value="ph-option">Phishing Attack</option>
-              </select>
-              <br/>
-            </div>
-            <div className='attack-config-container'>
-              <ConfigBF isBFVisible={showBFConfig}></ConfigBF>
-              <ConfigDoS isDoSVisible={showDoSConfig} sendDoSConfig={handleDataFromDoS}></ConfigDoS>
-              <ConfigPhish isPhishVisible={showPhishConfig} sendPhishConfig={handlePhishConfig}></ConfigPhish>
-            </div>
-          </div>
-          </>);
+
+  return (<>
+    <div className="attack-controls-container">
+      <h2>Attack Controls</h2>
+      <button className='execute-sim-button' onClick={handleLaunchAttack}>Execute Simulation</button>
+      <button className='pause-sim-button' onClick={handlePauseAttack}>Pause Simulation</button>
+      <button className='stop-sim-button' onClick={handleStopAttack}>Stop Simulation</button>
+      <div className='attack-info-container' id='dos-info-container' hidden={!dosReady}>
+        <label className='attack-info-labels' hidden={!dosAttack.IP}>IP Address: {dosAttack.IP}</label>
+        <label className='attack-info-labels' hidden={!dosAttack.URL}>URL: {dosAttack.URL}</label>
+        <label className='attack-info-labels'>Port Number: {dosAttack.portNumber}</label>
+        <label className='attack-info-labels'>Method: {dosAttack.method}</label>
+        <label className='attack-info-labels'>Threads: {dosAttack.threads}</label>
+        <label className='attack-info-labels'>Timeout: {dosAttack.timeout}</label>
+        <label className='attack-info-labels'>Speed: {dosAttack.speed}</label>
+        <label className='attack-info-labels'>Wait For Reply: {String(dosAttack.waitForReply).toUpperCase()}</label>
+        <label className='attack-info-labels'>Message: {dosAttack.message}</label>
+      </div>
+      <div className='attack-info-container' id='ph-info-container' hidden={!phishReady}>
+        <label className='attack-info-labels'>Subject: {phishAttack.subject}</label>
+        <label className='attack-info-labels'>From Address: {phishAttack.fromAddress}</label>
+        <label className='attack-info-labels'>From Name: {phishAttack.fromName}</label>
+        <label className='attack-info-labels'>Do NOT Add Tracking: {String(phishAttack.dontAddTracking).toUpperCase()}</label>
+      </div>
+      <div className='attack-info-container' id='bf-info-container' hidden={!bfReady}>
+      </div>
+    </div>
+    <div className='attack-types-container'>
+      <div className='attack-select-container'>
+        <h2>Choose Attack</h2>
+        <select className='attack-selector-input' id="attack-type-selector"
+          disabled={dosReady || phishReady || bfReady} onChange={handleConfigToggle}>
+          <option value="NONE"></option>
+          <option value="dos-option">Denial-of-Service Attack (DoS)</option>
+          <option value="bf-option">Brute Force Attack</option>
+          <option value="ph-option">Phishing Attack</option>
+        </select>
+        <br />
+      </div>
+      <div className='attack-config-container'>
+        <ConfigBF isBFVisible={showBFConfig}></ConfigBF>
+        <ConfigDoS isDoSVisible={showDoSConfig} sendDoSConfig={handleDataFromDoS}></ConfigDoS>
+        <ConfigPhish isPhishVisible={showPhishConfig} sendPhishConfig={handlePhishConfig}></ConfigPhish>
+      </div>
+    </div>
+  </>);
 }

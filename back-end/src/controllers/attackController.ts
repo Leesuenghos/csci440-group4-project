@@ -22,7 +22,7 @@ export async function startDDoS(req: Request, res: Response) {
         duration: parseInt(duration, 10)
     });
 
-    return res.json({
+    return res.status(success ? 200 : 400).json({
         success,
         message: success ? 'DDoS attack simulation started' : 'Failed to start DDoS simulation'
     });

@@ -1,9 +1,13 @@
 // services/metasploitService.ts
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import { insertEvent } from '../models/eventModel';
+import fs from 'fs';
+import path from 'path';
 
 let msfProcess: ChildProcessWithoutNullStreams | null = null;
-const METASPLOIT_PATH = 'c:/progra~1/Metasploit/msfconsole.bat';
+let lastExploitParams: ExploitParams | null = null;
+let lastCmdStr: string | null = null;
+let startTimestamp: number | null = null;
 
 interface ExploitParams {
     exploitModule: string;
@@ -13,75 +17,102 @@ interface ExploitParams {
 }
 
 export async function runExploit(params: ExploitParams): Promise<boolean> {
+    console.log('runExploit called with params:', params);
+    lastExploitParams = params;
     try {
         if (msfProcess) {
+            console.log('existing msfProcess detected, stopping before new run');
             stopExploit();
         }
 
-        // Create resource script (RC file) for automation
-        const rcFileContent = `
-            use ${params.exploitModule}
-            set RHOSTS ${params.targetIP}
-            ${params.targetPort ? `set RPORT ${params.targetPort}` : ''}
-            ${Object.entries(params.options || {}).map(([key, value]) => `set ${key} ${value}`).join('\n')}
-            exploit -j
-            exit
-        `;
+        // build the Metasploit RC script
+        const rcLines = [
+            `use ${params.exploitModule}`,
+            `set RHOSTS ${params.targetIP}`,
+            params.targetPort ? `set RPORT ${params.targetPort}` : null,
+            ...Object.entries(params.options || {}).map(([k, v]) => `set ${k} ${v}`),
+            'exploit -j',
+            'exit'
+        ].filter(Boolean);
 
-        // Save to temporary file
-        const fs = require('fs');
-        const rcFilePath = './temp_msf_commands.rc';
-        fs.writeFileSync(rcFilePath, rcFileContent);
+        const rcPath = path.resolve(__dirname, 'temp_msf_commands.rc');
+        fs.writeFileSync(rcPath, rcLines.join('\n'));
+        console.log('RC file written to:', rcPath);
 
-        // Log the event
         await insertEvent({
             type: 'exploit_attempt',
             source_ip: 'localhost',
             dest_ip: params.targetIP,
-            severity: 'high',
+            severity: 'high'
         });
 
-        // Execute Metasploit with resource file
-        msfProcess = spawn(METASPLOIT_PATH, ['-r', rcFilePath], { shell: true });
+        // correct Windows path with backslashes
+        const msfBatPath = 'E:\\metasploit-framework\\bin\\msfconsole.bat';
+        console.log('Using msfconsole path:', msfBatPath);
+        const cmdStr = `"${msfBatPath}" -r "${rcPath}"`;
+        lastCmdStr = cmdStr;
+        startTimestamp = Date.now();
+        console.log('spawning msfconsole with command:', cmdStr);
 
-        console.log(`Started exploit ${params.exploitModule} against ${params.targetIP}`);
+        // use cmd.exe with /s /c to properly parse quotes and backslashes
+        msfProcess = spawn('cmd.exe', ['/s', '/c', cmdStr], { shell: false });
 
-        msfProcess.stdout?.on('data', async (data: Buffer) => {
-            const output = data.toString();
-            console.log('Metasploit output:', output);
+        msfProcess.on('error', err => {
+            console.error('spawn error:', err);
+        });
 
-            // Parse for successful exploitation
-            if (output.includes('Command shell session') || output.includes('Meterpreter session')) {
+        msfProcess.stdout.on('data', async (data: Buffer) => {
+            const out = data.toString();
+            console.log('Metasploit stdout:', out);
+            if (/Meterpreter session|Command shell session/.test(out)) {
+                console.log('Exploit success detected in output');
                 await insertEvent({
                     type: 'exploit_success',
                     source_ip: 'localhost',
                     dest_ip: params.targetIP,
-                    severity: 'critical',
+                    severity: 'critical'
                 });
             }
         });
 
-        msfProcess.stderr?.on('data', (data: Buffer) => {
-            console.error('Metasploit error:', data.toString());
+        msfProcess.stderr.on('data', data => {
+            console.error('Metasploit stderr:', data.toString());
+        });
+
+        msfProcess.on('close', code => {
+            console.log('msfconsole exited with code:', code);
+            msfProcess = null;
         });
 
         return true;
-    } catch (error) {
-        console.error('Failed to execute exploit:', error);
+    } catch (e) {
+        console.error('runExploit failed with error:', e);
         return false;
     }
 }
 
 export function stopExploit(): void {
     if (msfProcess) {
+        console.log('Stopping msfconsole process');
         msfProcess.kill();
         msfProcess = null;
-        console.log('Exploit execution stopped');
+        console.log('Exploit stopped');
     }
 }
 
-export function getExploitStatus(): { active: boolean } {
+export function getExploitStatus(): {
+    active: boolean;
+    pid?: number;
+    command?: string;
+    startedAt?: string;
+    params?: ExploitParams;
+} {
+    const active = msfProcess !== null;
     return {
-        active: msfProcess !== null
+        active,
+        pid: msfProcess?.pid || undefined,
+        command: lastCmdStr || undefined,
+        startedAt: startTimestamp ? new Date(startTimestamp).toISOString() : undefined,
+        params: lastExploitParams || undefined
     };
 }

